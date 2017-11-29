@@ -17,12 +17,7 @@ var through2 = require("through2"),
             if (errors && errors.length > 0) {
                 file.i18nlint = [];
                 errors.forEach(function (error) {
-                    hasDelim = options.rules && options.rules.templateDelimiters;
-                    templated = hasDelim && error.scope.indexOf(options.rules.templateDelimiters[0]) !== -1 && error.scope.indexOf(options.rules.templateDelimiters[1]) !== -1;
-
-                    if( !options.rules || !options.rules.templateDelimiters || !templated ) {
-                        file.i18nlint.push({file: file.path, error: error});
-                    }
+                    file.i18nlint.push({file: file.path, error: error});
                 });
             }
 
