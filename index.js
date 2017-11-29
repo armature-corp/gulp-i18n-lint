@@ -7,6 +7,8 @@ var through2 = require("through2"),
         options = options || {};
 
         return through2.obj(function (file, enc, cb) {
+            var templated = false;
+            var hasDelim = false;
             var errors = i18nLint.scan(file.contents.toString(),
                 options.rules
             );
@@ -15,7 +17,12 @@ var through2 = require("through2"),
             if (errors && errors.length > 0) {
                 file.i18nlint = [];
                 errors.forEach(function (error) {
-                    file.i18nlint.push({file: file.path, error: error});
+                    hasDelim = options.rules && options.rules.templateDelimiters;
+                    templated = hasDelim && error.scope.indexOf(options.rules.templateDelimiters[0]) !== -1 && error.scope.indexOf(options.rules.templateDelimiters[1]) !== -1;
+
+                    if( !options.rules || !options.rules.templateDelimiters || !templated ) {
+                        file.i18nlint.push({file: file.path, error: error});
+                    }
                 });
             }
 
